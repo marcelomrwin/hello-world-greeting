@@ -1,3 +1,5 @@
+@Library('groovy-libs') _
+
 def version = null
 def artifactId = null
 def groupId = null
