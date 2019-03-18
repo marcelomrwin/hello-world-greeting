@@ -82,6 +82,22 @@ pipeline{
       }
     }
 
+    stage('Performance Testing'){
+      agent { label "docker-performance" }
+      steps {
+        script {
+          sh '''cd /home/jenkins/tomcat/bin
+          ./startup.sh''';
+          unstash 'binary'
+          sh "cp target/*.${pom.packaging} /home/jenkins/tomcat/webapps/";
+          sh '''cd /opt/jmeter/bin/
+          ./jmeter.sh -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l
+          $WORKSPACE/test_report.jtl''';
+          step([$class: 'ArtifactArchiver', artifacts: '**/*.jtl'])
+        }
+      }
+    }
+
     stage("publish to nexus") {
         steps {
             script {
