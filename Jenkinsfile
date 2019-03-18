@@ -89,12 +89,9 @@ pipeline{
         script {
           sh '''cd /home/jenkins/tomcat/bin
           ./startup.sh''';
-          sh 'pwd'
-          sh 'ls -lah'
           unstash 'binary'
-          sh 'ls -lah'
           sh "cp target/*.${pom.packaging} /home/jenkins/tomcat/webapps/";
-          sh 'sleep 5'
+          sh 'sleep 10'
           sh 'cat /home/jenkins/tomcat/logs/*.log'
           sh '''cd /opt/jmeter/bin/
           ./jmeter.sh -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l $WORKSPACE/test_report.jtl''';
