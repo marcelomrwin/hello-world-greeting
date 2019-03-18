@@ -94,7 +94,7 @@ pipeline{
           sh 'sleep 10'
           sh 'cat /home/jenkins/tomcat/logs/*.log'
           sh '''cd /opt/jmeter/bin/
-          ./jmeter.sh -Jjmeter.save.saveservice.output_format=xml -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l $WORKSPACE/test_report.jtl''';
+          ./jmeter.sh -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l $WORKSPACE/test_report.jtl''';
           step([$class: 'ArtifactArchiver', artifacts: '**/*.jtl'])
         }
       }
