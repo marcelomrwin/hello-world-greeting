@@ -94,6 +94,12 @@ pipeline{
           unstash 'binary'
           sh 'ls -lah'
           sh "cp target/*.${pom.packaging} /home/jenkins/tomcat/webapps/";
+          sh 'sleep 10'
+          sh 'cat /home/jenkins/tomcat/logs/*.log'
+          sh '''until $(curl --output /dev/null --silent --head --fail http://localhost:8080/hello-0.0.1); do
+          printf '.'
+          sleep 5
+          done''';
           sh '''cd /opt/jmeter/bin/
           ./jmeter.sh -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l $WORKSPACE/test_report.jtl''';
           step([$class: 'ArtifactArchiver', artifacts: '**/*.jtl'])
