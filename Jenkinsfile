@@ -96,7 +96,7 @@ pipeline{
           sh '''cd /opt/jmeter/bin/
           ./jmeter.sh -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l $WORKSPACE/test_report.jtl''';
           step([$class: 'ArtifactArchiver', artifacts: '**/*.jtl'])
-          perfReport '$WORKSPACE/test_report.jtl'
+          perfReport '**/test_report.jtl'
         }
       }
     }
