@@ -78,7 +78,7 @@ pipeline{
 
     stage('Prepare to performance Test'){
       steps{
-        stash includes: 'target/*.${pom.packaging},src/pt/Hello_World_Test_Plan.jmx', name: 'binary'
+        stash includes: "target/*.${pom.packaging},src/pt/Hello_World_Test_Plan.jmx", name: 'binary'
       }
     }
 
@@ -88,7 +88,10 @@ pipeline{
         script {
           sh '''cd /home/jenkins/tomcat/bin
           ./startup.sh''';
+          sh 'echo ${pwd}'
+          sh 'ls -lah'
           unstash 'binary'
+          sh 'ls -lah'
           sh "cp target/*.${pom.packaging} /home/jenkins/tomcat/webapps/";
           sh '''cd /opt/jmeter/bin/
           ./jmeter.sh -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l
