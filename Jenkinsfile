@@ -1,6 +1,7 @@
 def version = null
 def artifactId = null
 def groupId = null
+
 pipeline{
   agent {
     label "maven"
@@ -23,14 +24,10 @@ pipeline{
     stage('Poll'){
         steps {
           script{
-            echo "Baixando código do repositório SCM"
             checkout scm
             version = getVersionFromPom()
-            echo "Get Version ${version}"
             groupId = getGroupIdFromPom()
-            echo "Get groupId ${groupId}"
             artifactId = getArtifactIdFromPom()
-            echo "Get ArtifactId ${artifactId}"
           }
         }
     }
@@ -76,6 +73,12 @@ pipeline{
           junit '**/target/failsafe-reports/TEST-*.xml'
           archive 'target/*.jar'
         }
+      }
+    }
+
+    stage('Prepare to performance Test'){
+      steps{
+        stash includes: "target/*.${pom.packaging},src/pt/Hello_World_Test_Plan.jmx",name: 'binary'
       }
     }
 
