@@ -76,13 +76,7 @@ pipeline{
       }
     }
 
-    stage('Prepare to performance Test'){
-      steps{
-        script{
-          stash includes: "target/*.${pom.packaging},src/pt/Hello_World_Test_Plan.jmx",name: 'binary'
-        }
-      }
-    }
+    
 
     stage("publish to nexus") {
         steps {
