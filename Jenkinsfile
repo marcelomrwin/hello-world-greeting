@@ -93,11 +93,7 @@ pipeline{
           sh 'ls -lah'
           unstash 'binary'
           sh 'ls -lah'
-          sh "cp target/*.${pom.packaging} /home/jenkins/tomcat/webapps/";
-          sh '''cd /opt/jmeter/bin/
-          ./jmeter.sh -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l
-          $WORKSPACE/test_report.jtl''';
-          step([$class: 'ArtifactArchiver', artifacts: '**/*.jtl'])
+
         }
       }
     }
