@@ -78,7 +78,9 @@ pipeline{
 
     stage('Prepare to performance Test'){
       steps{
-        stash includes: "target/*.${pom.packaging},src/pt/Hello_World_Test_Plan.jmx",name: 'binary'
+        script{
+          stash includes: "target/*.${pom.packaging},src/pt/Hello_World_Test_Plan.jmx",name: 'binary'
+        }
       }
     }
 
