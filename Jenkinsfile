@@ -45,8 +45,13 @@ pipeline{
 
     stage('SonarQube Static Code analysis') {
       steps {
-        withMaven( maven: 'M3', mavenSettingsConfig: 'maven-settings') {
-
+        withMaven( maven: 'M3', mavenSettingsConfig: 'maven-settings',
+        options: [
+          artifactsPublisher(disabled: true),
+          findbugsPublisher(disabled: false),
+          openTasksPublisher(disabled: false),
+          junitPublisher(disabled: false)
+        ]) {
           withSonarQubeEnv('SonarQube') {
             sh "mvn clean verify sonar:sonar -Dsonar.login=admin -Dsonar.password=admin -Dsonar.verbose=true -Dsonar.projectName=${groupId}:${artifactId} -Dsonar.projectKey=${groupId}:${artifactId} -Dsonar.projectVersion=$BUILD_NUMBER";
           }
