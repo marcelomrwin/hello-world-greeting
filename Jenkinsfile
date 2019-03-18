@@ -1,7 +1,7 @@
 def version = null
 def artifactId = null
 def groupId = null
-
+def pom = null
 pipeline{
   agent {
     label "maven"
@@ -28,6 +28,7 @@ pipeline{
             version = getVersionFromPom()
             groupId = getGroupIdFromPom()
             artifactId = getArtifactIdFromPom()
+            pom = readMavenPom file: "pom.xml";
           }
         }
     }
