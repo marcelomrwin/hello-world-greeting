@@ -8,21 +8,20 @@ import static org.junit.Assert.assertEquals;
 
 public class GreetingMessageIT {
 
-	GreetingMessage var = new GreetingMessage();
-	private String message;
-
    @Test
    public void testPrintMessage() {
+      GreetingMessage var = new GreetingMessage();
+	 String message;
    	GregorianCalendar time = new GregorianCalendar();
  	int hour = time.get(Calendar.HOUR_OF_DAY);
 	if (hour < 12)
-    this.message = "Good Morning!";
+    message = "Good Morning!";
     else if (hour < 17 && !(hour == 12))
-    this.message = "Good Afternoon!";
+    message = "Good Afternoon!";
     else if (hour == 12)
-    this.message = "Good Noon!";
+    message = "Good Noon!";
     else
-    this.message = "Good Evening!";
+    message = "Good Evening!";
    	
     assertEquals(message,var.printMessage());
 
