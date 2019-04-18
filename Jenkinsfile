@@ -14,7 +14,7 @@ pipeline{
   environment {
     NEXUS_VERSION = "nexus3"
     NEXUS_PROTOCOL = "https"
-    NEXUS_URL = "10.1.124.132"
+    NEXUS_URL = "10.1.123.207"
     NEXUS_REPOSITORY = "company-project"
     NEXUS_CREDENTIAL_ID = "jenkinsldap"
     MAX_WARNING_VIOLATIONS = 30
