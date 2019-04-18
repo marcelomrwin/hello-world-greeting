@@ -1,29 +1,24 @@
 package hello;
 
 public class GreetingMessage {
-  
-     private String message;
-     private int hours;
-
+private int hours=0;
      // constructor
-     public GreetingMessage(){
-      
-      DateTime var = new DateTime();
-        this.hours = var.dateTime();
-
-      if (hours < 12)
-      this.message = "Good Morning!";
-      else if (hours < 17 && !(hours == 12))
-      this.message = "Good Afternoon!";
-      else if (hours == 12)
-      this.message = "Good Noon!";
-      else
-      this.message = "Good Evening!";
+     public GreetingMessage(int hour){
+       this.hours = hour;
      }
-      
-     // return message 
+
+     // return message
      public String printMessage(){
-        System.out.println(message);
+      String message="";
+       if (hours < 12)
+        message = "Good Morning!";
+       else if (hours < 17 && hours != 12)
+        message = "Good Afternoon!";
+       else if (hours == 12)
+        message = "Good Noon!";
+       else
+        message = "Good Evening!";
+
         return message;
-     }   
-  } 
+     }
+  }
