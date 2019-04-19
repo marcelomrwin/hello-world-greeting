@@ -87,7 +87,6 @@ pipeline{
         script {
           sh 'mvn clean verify -Dsurefire.skip=true';
           junit '**/target/failsafe-reports/TEST-*.xml'
-          sh 'mvn clean package -DskipTests';
 //          archive 'target/*.jar'
         }
       }
