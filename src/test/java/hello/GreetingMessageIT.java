@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 
-public class GreetingMessageTest {
+public class GreetingMessageIT {
 
    @Test
    public void testGoodMorning() {
