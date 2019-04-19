@@ -102,20 +102,22 @@ pipeline{
       agent { label "docker-performance" }
       steps {
         script {
-          sh '''cd /home/jenkins/tomcat/bin
-          ./startup.sh''';
-          unstash 'binary'
-          sh "cp target/*.${pom.packaging} /home/jenkins/tomcat/webapps/"
-          sh "sleep 10"
-          sh 'while ! httping -qc1 http://localhost:8080/greetings-0.0.1 ; do sleep 3 ; done'
-          sh 'cat /home/jenkins/tomcat/logs/*.log'
-          sh '''cd /opt/jmeter/bin/
-          ./jmeter.sh -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l $WORKSPACE/test_report.jtl''';
-          step([$class: 'ArtifactArchiver', artifacts: '**/*.jtl'])
-          sh 'cat /home/jenkins/tomcat/logs/*.log'
-          perfReport sourceDataFiles: '**/test_report.jtl', modePerformancePerTestCase: true, modeOfThreshold: true, errorFailedThreshold: 1
-          if (getAvg() < 100){
-            echo 'Avg abaixo de 100'
+          timeout(time: 5, unit: 'MINUTES') {
+            sh '''cd /home/jenkins/tomcat/bin
+            ./startup.sh''';
+            unstash 'binary'
+            sh "cp target/*.${pom.packaging} /home/jenkins/tomcat/webapps/"
+            sh "sleep 10"
+            sh 'while ! httping -qc1 http://localhost:8080/greetings-0.0.1 ; do sleep 3 ; done'
+            sh 'cat /home/jenkins/tomcat/logs/*.log'
+            sh '''cd /opt/jmeter/bin/
+            ./jmeter.sh -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l $WORKSPACE/test_report.jtl''';
+            step([$class: 'ArtifactArchiver', artifacts: '**/*.jtl'])
+            sh 'cat /home/jenkins/tomcat/logs/*.log'
+            perfReport sourceDataFiles: '**/test_report.jtl', modePerformancePerTestCase: true, modeOfThreshold: true, errorFailedThreshold: 1
+            if (getAvg() < 100){
+              echo 'Avg abaixo de 100'
+            }
           }
         }
       }
