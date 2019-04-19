@@ -36,7 +36,7 @@ pipeline{
     stage('Build & Unit test'){
         steps {
           script {
-            sh 'mvn clean verify -DskipITs=true -U';
+            sh 'mvn clean verify -DskipITs=true';
             junit '**/target/surefire-reports/TEST-*.xml'
           //  archive 'target/*.jar'
           }
@@ -53,7 +53,7 @@ pipeline{
           junitPublisher(disabled: false)
         ]) {
           withSonarQubeEnv('SonarQube') {
-            sh "mvn clean verify sonargraph:dynamic-report sonar:sonar -Dsonar.login=admin -Dsonar.password=admin -Dsonar.verbose=true -Dsonar.projectName=${groupId}:${artifactId} -Dsonar.projectKey=${groupId}:${artifactId} Dsonar.dependencyCheck.reportPath=target/dependency-check-report.xml -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -U -Dsonar.projectVersion=$BUILD_NUMBER";
+            sh "mvn clean verify sonargraph:dynamic-report sonar:sonar -Dsonar.login=admin -Dsonar.password=admin -Dsonar.verbose=true -Dsonar.projectName=${groupId}:${artifactId} -Dsonar.projectKey=${groupId}:${artifactId} Dsonar.dependencyCheck.reportPath=target/dependency-check-report.xml -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dsonar.projectVersion=$BUILD_NUMBER";
           }
         }
       }
@@ -75,7 +75,7 @@ pipeline{
     stage ('Integration Test'){
       steps{
         script {
-          sh 'mvn clean verify -Dsurefire.skip=true -U';
+          sh 'mvn clean verify -Dsurefire.skip=true';
           junit '**/target/failsafe-reports/TEST-*.xml'
 //          archive 'target/*.jar'
         }
