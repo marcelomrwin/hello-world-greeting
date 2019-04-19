@@ -118,7 +118,7 @@
         <!-- add an execution to be automatically ran as part of the 'verify' build lifecycle phase -->
         <executions>
           <execution>
-            <phase>compile</phase>
+            <phase>verify</phase>
             <goals>
               <goal>check</goal>
             </goals>
