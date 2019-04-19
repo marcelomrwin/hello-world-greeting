@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 
-public class GreetingMessageIT {
+public class GreetingMessageTest {
 
    @Test
    public void testGoodMorning() {
