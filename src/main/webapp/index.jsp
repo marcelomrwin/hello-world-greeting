@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Simple Test Application</title>
 <style>
 table h5 {margin: 10px; font-size: 14px}
 table td {text-align: left;}

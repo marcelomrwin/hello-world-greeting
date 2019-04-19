@@ -1,14 +1,21 @@
 package hello;
 
 public class GreetingMessage {
-private int hours=0;
+private Integer hours;
      // constructor
-     public GreetingMessage(int hour){
+     public GreetingMessage(){
+       super();
+     }
+
+     public GreetingMessage(Integer hour){
        this.hours = hour;
      }
 
      // return message
      public String printMessage(){
+
+       configHour();
+
       String message="";
        if (hours < 12)
         message = "Good Morning!";
@@ -20,5 +27,12 @@ private int hours=0;
         message = "Good Evening!";
 
         return message;
+     }
+
+     private void configHour(){
+       if (this.hours == null){
+         DateTime var = new DateTime();
+         this.hours = var.dateTime();
+       }
      }
   }
