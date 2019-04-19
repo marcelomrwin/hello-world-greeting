@@ -12,6 +12,15 @@ def getAvg() {
     return result.toInteger();
 }
 
+def getErrorPercent(){
+  def result = sh (
+      script: 'grep "summary ="/opt/jmeter/bin/jmeter.log | awk \'{print \$20}\' | tr -d '/s' | grep -o '[0-9.,]\+'',
+      returnStdout: true
+  ).trim()
+  echo "errors = ${result}"
+  return result.toDouble();
+}
+
 pipeline{
   agent {
     label "maven"
@@ -117,6 +126,10 @@ pipeline{
             perfReport sourceDataFiles: '**/test_report.jtl', modePerformancePerTestCase: true, modeOfThreshold: true, errorFailedThreshold: 1
             if (getAvg() < 100){
               echo 'Avg abaixo de 100'
+            }
+            // If percent of errors is more than 10
+            if (getErrorPercent() > 10.0){
+              error "Falha devido percentual de erros no teste de performance."
             }
           }
         }
