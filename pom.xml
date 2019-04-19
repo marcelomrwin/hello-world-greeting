@@ -19,7 +19,25 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
+      <version>2.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>2.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>hello2morrow.maven.repository</id>
+      <url>http://maven.hello2morrow.com/repository</url>
+    </pluginRepository>
+  </pluginRepositories>
   <build>
     <pluginManagement>
       <plugins>
@@ -65,30 +83,91 @@
         </configuration>
       </plugin>
       <plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.3</version>
-				<executions>
-					<execution>
-						<id>default-prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>default-report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.3</version>
+        <executions>
+          <execution>
+            <id>default-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-report</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
-				<groupId>org.sonarsource.scanner.maven</groupId>
-				<artifactId>sonar-maven-plugin</artifactId>
-				<version>3.6.0.1398</version>
-			</plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>4.0.2</version>
+        <!-- https://jeremylong.github.io/DependencyCheck/dependency-check-maven/configuration.html -->
+        <configuration>
+          <!-- Generate all report formats -->
+          <format>ALL</format>
+          <!-- Don't use Nexus Analyzer -->
+          <centralAnalyzerEnabled>false</centralAnalyzerEnabled>
+          <!-- Am I the latest version? -->
+          <versionCheckEnabled>true</versionCheckEnabled>
+        </configuration>
+        <!-- add an execution to be automatically ran as part of the 'verify' build lifecycle phase -->
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <version>3.6.0.1398</version>
+      </plugin>
+      <plugin>
+        <groupId>com.hello2morrow</groupId>
+        <artifactId>sonargraph-maven-plugin</artifactId>
+        <version>9.10.0</version>
+        <configuration>
+          <systemDirectory>${project.build.directory}</systemDirectory>
+          <activationCode>5F27-57CA-031B-5D61</activationCode>
+          <reportFormat>xml,html</reportFormat>
+          <prepareForSonarQube>true</prepareForSonarQube>
+          <autoUpdate>true</autoUpdate>
+          <failSet>
+            <failOnEmptyWorkspace>true</failOnEmptyWorkspace>
+            <includes>
+              <include>
+                <issueType>ArchitectureViolation</issueType>
+              </include>
+              <include>
+                <issueType>any</issueType>
+                <severity>error</severity>
+              </include>
+            </includes>
+            <excludes>
+              <exclude>
+                <issueType>ScriptCompilationError</issueType>
+                <resolution>none</resolution>
+              </exclude>
+            </excludes>
+          </failSet>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>create-report</goal>
+              <goal>dynamic-report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
