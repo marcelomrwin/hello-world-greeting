@@ -76,6 +76,33 @@ pipeline{
           }
         }
       }
+      post {
+          success {
+              archiveArtifacts artifacts: '**/dependency-check-report.*', onlyIfSuccessful: true
+              archiveArtifacts artifacts: '**/jacoco.exec', onlyIfSuccessful: true
+              sh 'tar -czvf target/sonar.tar.gz target/sonar'
+              archiveArtifacts artifacts: 'target/sonar.tar.gz', onlyIfSuccessful: true
+
+              publishHTML (target: [
+                allowMissing: true,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'site/jacoco',
+                reportFiles: 'index.html',
+                reportName: "Jacoco Report"
+              ])
+
+              publishHTML (target: [
+                allowMissing: true,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'site/cobertura',
+                reportFiles: 'index.html',
+                reportName: "Cobertura Report"
+              ])
+
+          }
+      }
     }
 
     stage ('Integration Test'){
@@ -171,34 +198,6 @@ pipeline{
                 } else {
                     error "*** File: ${artifactPath}, could not be found";
                 }
-            }
-        }
-
-        post {
-            success {
-                archiveArtifacts artifacts: '**/dependency-check-report.*', onlyIfSuccessful: true
-                archiveArtifacts artifacts: '**/jacoco.exec', onlyIfSuccessful: true
-                sh 'tar -czvf target/sonar.tar.gz target/sonar'
-                archiveArtifacts artifacts: 'target/sonar.tar.gz', onlyIfSuccessful: true
-
-                publishHTML (target: [
-                  allowMissing: true,
-                  alwaysLinkToLastBuild: false,
-                  keepAll: true,
-                  reportDir: 'site/jacoco',
-                  reportFiles: 'index.html',
-                  reportName: "Jacoco Report"
-                ])
-
-                publishHTML (target: [
-                  allowMissing: true,
-                  alwaysLinkToLastBuild: false,
-                  keepAll: true,
-                  reportDir: 'site/cobertura',
-                  reportFiles: 'index.html',
-                  reportName: "Cobertura Report"
-                ])
-
             }
         }
     }
