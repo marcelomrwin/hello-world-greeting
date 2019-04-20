@@ -88,17 +88,6 @@ pipeline{
 
               sh 'tar -czvf target/cobertura.tar.gz target/site/cobertura'
               archiveArtifacts artifacts: 'target/cobertura.tar.gz', onlyIfSuccessful: true
-
-              publishHTML (target: [
-                allowMissing: true,
-                alwaysLinkToLastBuild: false,
-                keepAll: true,
-                reportDir: '.',
-                reportFiles: 'dependency-check-vulnerability.html',
-                reportName: "Dependency Check Vulnerability"
-              ])
-
-
           }
       }
     }
