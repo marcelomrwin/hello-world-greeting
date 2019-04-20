@@ -93,6 +93,7 @@ pipeline{
                 allowMissing: true,
                 alwaysLinkToLastBuild: false,
                 keepAll: true,
+                reportDir: '.',
                 reportFiles: 'dependency-check-vulnerability.html',
                 reportName: "Dependency Check Vulnerability"
               ])
