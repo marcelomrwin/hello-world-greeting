@@ -172,10 +172,11 @@ pipeline{
         }
     }
 
-    post {
-        always {
-            archiveArtifacts artifacts: '**/*.xml', onlyIfSuccessful: true
-        }
-    }
+  }
+
+  post {
+      always {
+          archiveArtifacts artifacts: '**/*.xml', onlyIfSuccessful: true
+      }
   }
 }
