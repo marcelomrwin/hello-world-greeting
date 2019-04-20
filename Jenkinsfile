@@ -123,6 +123,8 @@ pipeline{
             ./jmeter.sh -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l $WORKSPACE/test_report.jtl''';
             step([$class: 'ArtifactArchiver', artifacts: '**/*.jtl'])
             sh 'cat /home/jenkins/tomcat/logs/*.log'
+            echo 'Open jmeter.log'
+            sh 'cat /opt/jmeter/bin/jmeter.log'
             perfReport sourceDataFiles: '**/test_report.jtl', modePerformancePerTestCase: true, modeOfThreshold: true, errorFailedThreshold: 1
             if (getAvg() < 100){
               echo 'Avg abaixo de 100'
