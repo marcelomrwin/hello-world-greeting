@@ -59,7 +59,7 @@ pipeline{
           junitPublisher(disabled: false)
         ]) {
           withSonarQubeEnv('SonarQube') {
-            sh "mvn clean verify sonargraph:dynamic-report sonar:sonar -Dsonar.login=admin -Dsonar.password=admin -Dsonar.verbose=true -Dsonar.projectName=${groupId}:${artifactId} -Dsonar.projectKey=${groupId}:${artifactId} -Dsonar.dependencyCheck.reportPath=target/dependency-check-report.xml -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dcobertura.report.format=xml -Dsonar.cobertura.reportPath=target/site/cobertura/coverage.xml -Dsonar.projectVersion=$BUILD_NUMBER";
+            sh "mvn clean verify sonargraph:dynamic-report sonar:sonar -Dsonar.login=admin -Dsonar.password=admin -Dsonar.verbose=true -Dsonar.projectName=${groupId}:${artifactId} -Dsonar.projectKey=${groupId}:${artifactId} -Dsonar.dependencyCheck.reportPath=target/dependency-check-report.xml -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dcobertura.report.format=html -Dsonar.cobertura.reportPath=target/cobertura/coverage.html -Dsonar.projectVersion=$BUILD_NUMBER";
           }
         }
       }
@@ -78,28 +78,25 @@ pipeline{
       }
       post {
           success {
-              archiveArtifacts artifacts: '**/dependency-check-report.*', onlyIfSuccessful: true
+              archiveArtifacts artifacts: '**/dependency-check-report.json', onlyIfSuccessful: true
               archiveArtifacts artifacts: '**/jacoco.exec', onlyIfSuccessful: true
               sh 'tar -czvf target/sonar.tar.gz target/sonar'
               archiveArtifacts artifacts: 'target/sonar.tar.gz', onlyIfSuccessful: true
 
-              publishHTML (target: [
-                allowMissing: true,
-                alwaysLinkToLastBuild: false,
-                keepAll: true,
-                reportDir: 'site/jacoco',
-                reportFiles: 'index.html',
-                reportName: "Jacoco Report"
-              ])
+              sh 'tar -czvf target/jacoco.tar.gz target/site/jacoco'
+              archiveArtifacts artifacts: 'target/jacoco.tar.gz', onlyIfSuccessful: true
+
+              sh 'tar -czvf target/cobertura.tar.gz target/site/cobertura'
+              archiveArtifacts artifacts: 'target/cobertura.tar.gz', onlyIfSuccessful: true
 
               publishHTML (target: [
                 allowMissing: true,
                 alwaysLinkToLastBuild: false,
                 keepAll: true,
-                reportDir: 'site/cobertura',
-                reportFiles: 'index.html',
-                reportName: "Cobertura Report"
+                reportFiles: 'dependency-check-vulnerability.html',
+                reportName: "Dependency Check Vulnerability"
               ])
+
 
           }
       }
@@ -135,8 +132,6 @@ pipeline{
             sh '''cd /opt/jmeter/bin/
             ./jmeter.sh -n -t $WORKSPACE/src/pt/Hello_World_Test_Plan.jmx -l $WORKSPACE/test_report.jtl''';
             step([$class: 'ArtifactArchiver', artifacts: '**/*.jtl'])
-            sh 'cat /home/jenkins/tomcat/logs/*.log'
-            sh 'cat /opt/jmeter/bin/jmeter.log'
             perfReport sourceDataFiles: '**/test_report.jtl', modePerformancePerTestCase: true, modeOfThreshold: true, errorFailedThreshold: 1
 
             if (getAvgFromJmeter() > 5){
