@@ -179,7 +179,7 @@ pipeline{
           archiveArtifacts artifacts: '**/sonar/*.xml', onlyIfSuccessful: true
 
           publishHTML (target: [
-            allowMissing: false,
+            allowMissing: true,
             alwaysLinkToLastBuild: false,
             keepAll: true,
             reportDir: 'site/jacoco',
@@ -188,12 +188,12 @@ pipeline{
           ])
 
           publishHTML (target: [
-            allowMissing: false,
+            allowMissing: true,
             alwaysLinkToLastBuild: false,
             keepAll: true,
             reportDir: 'site/cobertura',
             reportFiles: 'index.html',
-            reportName: "Jacoco Report"
+            reportName: "Cobertura Report"
           ])
 
       }
