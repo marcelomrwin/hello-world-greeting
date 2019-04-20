@@ -178,8 +178,8 @@ pipeline{
             success {
                 archiveArtifacts artifacts: '**/dependency-check-report.*', onlyIfSuccessful: true
                 archiveArtifacts artifacts: '**/jacoco.exec', onlyIfSuccessful: true
-                sh 'tar -czvf target/sonar.tar target/sonar'
-                archiveArtifacts artifacts: 'target/sonar.tar', onlyIfSuccessful: true
+                sh 'tar -czvf target/sonar.tar.gz target/sonar'
+                archiveArtifacts artifacts: 'target/sonar.tar.gz', onlyIfSuccessful: true
 
                 publishHTML (target: [
                   allowMissing: true,
