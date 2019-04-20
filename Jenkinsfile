@@ -174,7 +174,28 @@ pipeline{
 
   post {
       always {
-          archiveArtifacts artifacts: '**/*.xml', onlyIfSuccessful: true
+          archiveArtifacts artifacts: '**/dependency-check-report.*', onlyIfSuccessful: true
+          archiveArtifacts artifacts: '**/jacoco.exec', onlyIfSuccessful: true
+          archiveArtifacts artifacts: '**/sonar/*.xml', onlyIfSuccessful: true
+
+          publishHTML (target: [
+            allowMissing: false,
+            alwaysLinkToLastBuild: false,
+            keepAll: true,
+            reportDir: 'site/jacoco',
+            reportFiles: 'index.html',
+            reportName: "Jacoco Report"
+          ])
+
+          publishHTML (target: [
+            allowMissing: false,
+            alwaysLinkToLastBuild: false,
+            keepAll: true,
+            reportDir: 'site/cobertura',
+            reportFiles: 'index.html',
+            reportName: "Jacoco Report"
+          ])
+
       }
   }
 }
