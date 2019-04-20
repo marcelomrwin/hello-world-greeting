@@ -21,6 +21,11 @@ pipeline{
     MAX_WARNING_VIOLATIONS = 30
   }
 
+  options {
+    // Only keep the 10 most recent builds
+    buildDiscarder(logRotator(numToKeepStr:'10'))
+  }
+
   stages{
     stage('Poll'){
         steps {
@@ -168,34 +173,40 @@ pipeline{
                 }
             }
         }
+
+        post {
+            success {
+                archiveArtifacts artifacts: '**/dependency-check-report.*', onlyIfSuccessful: true
+                archiveArtifacts artifacts: '**/jacoco.exec', onlyIfSuccessful: true
+                sh 'tar -czvf target/sonar.tar target/sonar'
+                archiveArtifacts artifacts: 'target/sonar.tar', onlyIfSuccessful: true
+
+                publishHTML (target: [
+                  allowMissing: true,
+                  alwaysLinkToLastBuild: false,
+                  keepAll: true,
+                  reportDir: 'site/jacoco',
+                  reportFiles: 'index.html',
+                  reportName: "Jacoco Report"
+                ])
+
+                publishHTML (target: [
+                  allowMissing: true,
+                  alwaysLinkToLastBuild: false,
+                  keepAll: true,
+                  reportDir: 'site/cobertura',
+                  reportFiles: 'index.html',
+                  reportName: "Cobertura Report"
+                ])
+
+            }
+        }
     }
 
   }
-
   post {
-      always {
-          archiveArtifacts artifacts: '**/dependency-check-report.*', onlyIfSuccessful: true
-          archiveArtifacts artifacts: '**/jacoco.exec', onlyIfSuccessful: true
-          archiveArtifacts artifacts: '**/sonar/*.xml', onlyIfSuccessful: true
-
-          publishHTML (target: [
-            allowMissing: true,
-            alwaysLinkToLastBuild: false,
-            keepAll: true,
-            reportDir: 'site/jacoco',
-            reportFiles: 'index.html',
-            reportName: "Jacoco Report"
-          ])
-
-          publishHTML (target: [
-            allowMissing: true,
-            alwaysLinkToLastBuild: false,
-            keepAll: true,
-            reportDir: 'site/cobertura',
-            reportFiles: 'index.html',
-            reportName: "Cobertura Report"
-          ])
-
-      }
+    always {
+      echo "Send notifications for result: ${currentBuild.result}"
+    }
   }
 }
