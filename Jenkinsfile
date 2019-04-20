@@ -5,7 +5,7 @@ def pom = null
 
 def getAvg() {
     def result = sh (
-        script: 'grep "summary ="/opt/jmeter/bin/jmeter.log | awk \'{ print \$11}\' | tr -d \'/s\' | cut -d. -f1',
+        script: 'grep "summary =" /opt/jmeter/bin/jmeter.log | awk \'{ print \$11}\' | tr -d \'/s\' | cut -d. -f1',
         returnStdout: true
     ).trim()
     echo "media = ${result}"
@@ -14,7 +14,7 @@ def getAvg() {
 
 def getErrorPercent(){
   def result = sh (
-      script: 'grep "summary ="/opt/jmeter/bin/jmeter.log | awk \'{print \$20}\' | tr -d \'/s\' | grep -o \'[0-9.,]\\+\'',
+      script: 'grep "summary =" /opt/jmeter/bin/jmeter.log | awk \'{print \$20}\' | tr -d \'/s\' | grep -o \'[0-9.,]\\+\'',
       returnStdout: true
   ).trim()
   echo "errors = ${result}"
