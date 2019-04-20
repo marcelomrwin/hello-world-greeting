@@ -107,17 +107,17 @@ pipeline{
             sh 'cat /opt/jmeter/bin/jmeter.log'
             perfReport sourceDataFiles: '**/test_report.jtl', modePerformancePerTestCase: true, modeOfThreshold: true, errorFailedThreshold: 1
 
-            if (getAvg() > 5){
+            if (getAvgFromJmeter() > 5){
               echo 'Avg abaixo acima de 5'
             }
 
             // If percent of errors is more than 10
-            if (getErrorPercent() > 10){
+            if (getErrorPercentFromJmeter() > 10){
               error "Falha devido percentual de erros no teste de performance."
             }
 
             // If avg response time for all requests is above 100ms consider approve manual build
-            if (getAvgResponseTime() > 100){
+            if (getAvgResponseTimeFromJmeter() > 100){
               timeout(time: 5, unit: 'MINUTES') {
                 input "Performance acima de 100 milesegundos, prosseguir?"
               }
