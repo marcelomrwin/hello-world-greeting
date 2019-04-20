@@ -3,24 +3,6 @@ def artifactId = null
 def groupId = null
 def pom = null
 
-def getAvg() {
-    def result = sh (
-        script: 'grep "summary =" /opt/jmeter/bin/jmeter.log | awk \'{ print \$11}\' | tr -d \'/s\' | cut -d. -f1',
-        returnStdout: true
-    ).trim()
-    echo "media = ${result}"
-    return result.toInteger();
-}
-
-def getErrorPercent(){
-  def result = sh (
-      script: 'grep "summary =" /opt/jmeter/bin/jmeter.log | awk \'{print \$20}\' | tr -d \'/s\' | grep -o \'[0-9.,]\\+\'',
-      returnStdout: true
-  ).trim()
-  echo "errors = ${result}"
-  return result.toDouble();
-}
-
 pipeline{
   agent {
     label "maven"
@@ -126,12 +108,21 @@ pipeline{
             echo 'Open jmeter.log'
             sh 'cat /opt/jmeter/bin/jmeter.log'
             perfReport sourceDataFiles: '**/test_report.jtl', modePerformancePerTestCase: true, modeOfThreshold: true, errorFailedThreshold: 1
-            if (getAvg() < 100){
-              echo 'Avg abaixo de 100'
+
+            if (getAvg() > 5){
+              echo 'Avg abaixo acima de 5'
             }
+
             // If percent of errors is more than 10
-            if (getErrorPercent() > 10.0){
+            if (getErrorPercent() > 10){
               error "Falha devido percentual de erros no teste de performance."
+            }
+
+            // If avg response time for all requests is above 100ms consider approve manual build
+            if (getAvgResponseTime() > 100){
+              timeout(time: 5, unit: 'MINUTES') {
+                input "Performance acima de 100 milesegundos, prosseguir?"
+              }
             }
           }
         }
@@ -178,6 +169,12 @@ pipeline{
                     error "*** File: ${artifactPath}, could not be found";
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '**/*.xml', onlyIfSuccessful: true
         }
     }
   }
