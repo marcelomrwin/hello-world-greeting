@@ -59,7 +59,7 @@ pipeline{
           junitPublisher(disabled: false)
         ]) {
           withSonarQubeEnv('SonarQube') {
-            sh "mvn clean verify sonargraph:dynamic-report sonar:sonar -Dsonar.login=admin -Dsonar.password=admin -Dsonar.verbose=true -Dsonar.projectName=${groupId}:${artifactId} -Dsonar.projectKey=${groupId}:${artifactId} -Dsonar.dependencyCheck.reportPath=target/dependency-check-report.xml -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dcobertura.report.format=html -Dsonar.cobertura.reportPath=target/cobertura/coverage.html -Dsonar.projectVersion=$BUILD_NUMBER";
+            sh "mvn clean verify sonar:sonar -Dsonar.login=admin -Dsonar.password=admin -Dsonar.verbose=true -Dsonar.projectName=${groupId}:${artifactId} -Dsonar.projectKey=${groupId}:${artifactId} -Dsonar.dependencyCheck.reportPath=target/dependency-check-report.xml -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dcobertura.report.format=html -Dsonar.cobertura.reportPath=target/cobertura/coverage.html -Dsonar.projectVersion=$BUILD_NUMBER";
           }
         }
       }
@@ -125,7 +125,7 @@ pipeline{
             perfReport sourceDataFiles: '**/test_report.jtl', modePerformancePerTestCase: true, modeOfThreshold: true, errorFailedThreshold: 1
 
             if (getAvgFromJmeter() > 5){
-              echo 'Avg abaixo acima de 5'
+              echo 'Avg acima de 5'
             }
 
             // If percent of errors is more than 10

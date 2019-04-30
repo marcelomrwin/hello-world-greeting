@@ -148,45 +148,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.hello2morrow</groupId>
-        <artifactId>sonargraph-maven-plugin</artifactId>
-        <version>9.10.0</version>
-        <configuration>
-          <systemDirectory>${project.build.directory}</systemDirectory>
-          <activationCode>5F27-57CA-031B-5D61</activationCode>
-          <reportFormat>xml,html</reportFormat>
-          <prepareForSonarQube>true</prepareForSonarQube>
-          <autoUpdate>true</autoUpdate>
-          <failSet>
-            <failOnEmptyWorkspace>true</failOnEmptyWorkspace>
-            <includes>
-              <include>
-                <issueType>ArchitectureViolation</issueType>
-              </include>
-              <include>
-                <issueType>any</issueType>
-                <severity>error</severity>
-              </include>
-            </includes>
-            <excludes>
-              <exclude>
-                <issueType>ScriptCompilationError</issueType>
-                <resolution>none</resolution>
-              </exclude>
-            </excludes>
-          </failSet>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>create-report</goal>
-              <goal>dynamic-report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+      </plugin>      
     </plugins>
   </build>
 </project>
